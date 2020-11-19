@@ -37,8 +37,6 @@ void process_image_callback(const sensor_msgs::Image img)
     int left_border = img.step / 4;
     int right_border = img.step - img.step / 4;
 
-    ROS_INFO_STREAM("Step: " + std::to_string(img.step) + " Right: " + std::to_string(right_border) + " Left: " + std::to_string(left_border) + " Target: " + std::to_string(target));
-
     if (target == -1)
     {
         drive_robot(0, 0);
