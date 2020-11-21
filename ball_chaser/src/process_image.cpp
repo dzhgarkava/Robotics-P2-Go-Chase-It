@@ -25,45 +25,39 @@ void process_image_callback(const sensor_msgs::Image img)
 
     int white_pixel = 255;
     int target = -1;
+    int left_ball_side = -1;
+    int right_ball_side = -1;
 
-    for (int i = 0; i < img.height * img.step; i++) {
-        if (img.data[i] == white_pixel)
+    for (int i = 0; i < img.height * img.step - 2; i++) {
+        if (img.data[i] == white_pixel && img.data[i+1] == white_pixel && img.data[i+2] == white_pixel)
         {
             target = i % img.step;
-            break;
+            break;    
         }
     }
 
-    int left_border = img.step / 2.5;
-    int right_border = img.step - img.step / 2.5;
+    int left_border = img.step / 6;
+    int right_border = img.step - img.step / 6;
+
 
     ROS_INFO_STREAM("Step: " + std::to_string(img.step) + " Right: " + std::to_string(right_border) + " Left: " + std::to_string(left_border) + " Target: " + std::to_string(target));
 
     if (target == -1)
     {
         drive_robot(0, 0);
-        return;
-    }
-
-    // Left side
+    } else    // Left side
     if (target < left_border)
     {
-        drive_robot(0, 0.5);
-        return;
-    }
-
-    // Center
+        drive_robot(0.2, 0.4);
+    } else    // Center
     if (target >= left_border && target <= right_border)
     {
         drive_robot(0.5, 0);
-        return;
-    }
-
+    } else 
     // Right side
     if (target > right_border)
     {
-        drive_robot(0, -0.5);
-        return;
+        drive_robot(0.2, -0.4);
     }
 }
 
